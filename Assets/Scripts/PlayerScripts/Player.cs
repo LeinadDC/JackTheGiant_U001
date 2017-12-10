@@ -11,16 +11,11 @@ public class Player : MonoBehaviour {
     {
         playerBody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
-    }
-    // Use this for initialization
-    void Start () {
-		
-	}
+    }//Ends Awake
 	
-	// Update is called once per frame
 	void FixedUpdate () {
         MovePlayer();
-	}
+	}//Ends FixedUpdate
 
     void MovePlayer()
     {
@@ -38,7 +33,7 @@ public class Player : MonoBehaviour {
 
                 ChangeLocalScale(1.3f);
             }
-        }
+        }//Ends horizontalInput > 0
         else if(horizontalInput < 0)
 
         {
@@ -49,19 +44,19 @@ public class Player : MonoBehaviour {
 
                 ChangeLocalScale(-1.3f);
             }
-        }
+        }//Ends horizontalInput < 0
         else
         {
             anim.SetBool("Walk", false);
-        }
+        }//Ends Else
 
         playerBody.AddForce(new Vector2(forceX, 0));
-    }
+    }//Ends MovePlayer
 
     private bool CheckVelocity(float velocity)
     {
         return velocity < maxVelocity;
-    }
+    }//Ends CheckVelocity
 
     private Vector3 ChangeLocalScale(float xScale)
     {
@@ -69,5 +64,6 @@ public class Player : MonoBehaviour {
         temp.x = xScale;
         transform.localScale = temp;
         return temp;
-    }
-}
+    }//Ends ChangeLocalScale
+
+}//Ends Class

@@ -9,14 +9,21 @@ public class CloudSpawner : MonoBehaviour {
     private GameObject player;
 
     private float distanceBetweenClouds = 3f;
-    private float minX, maxX, lastCloudYPosition, controlX;
+    private float minX, maxX, lastCloudYPosition;
+    private int controlX;
 
     void Awake() {
         controlX = 0;
         SetMinAndMaxX();
         CreateClouds();
+        player = GameObject.Find("Player");
 
     }//Ends Awake
+
+    void Start()
+    {
+        PositionThePlayer();
+    }//Ends Start
 
     void SetMinAndMaxX()
     {
@@ -59,26 +66,26 @@ public class CloudSpawner : MonoBehaviour {
             temp.y = positionY;
             temp.x = Random.Range(minX, maxX); //Posición X aleatoria en el rango min y max.
 
-            if (controlX == 0)//Verificamos la posicion X de la ultima nube para darle un efecto de "zig-zag" al spawn.
+            switch (controlX)
             {
-                temp = ChangeXPosition(temp,0.0f,maxX);
-                controlX = 1;
-            }
-            else if (controlX == 1)
-            {
-                temp = ChangeXPosition(temp, 0.0f, minX);
-                controlX = 2;
-            }
-            else if (controlX == 2)
-            {
-                temp = ChangeXPosition(temp, 1.0f, maxX);
-                controlX = 3;
-
-            }
-            else if (controlX == 3)
-            {
-                temp = ChangeXPosition(temp, 0.0f, minX);
-                controlX = 3;
+                case 0:
+                    temp = ChangeXPosition(temp, 0.0f, maxX);
+                    controlX = 1;
+                    break;
+                case 1:
+                    temp = ChangeXPosition(temp, 0.0f, minX);
+                    controlX = 2;
+                    break;
+                case 2:
+                    temp = ChangeXPosition(temp, 1.0f, maxX);
+                    controlX = 3;
+                    break;
+                case 3:
+                    temp = ChangeXPosition(temp, 0.0f, minX);
+                    controlX = 0;
+                    break;
+                default:
+                    break;
             }
 
             lastCloudYPosition = positionY; //Se guarda la ultima Y de la ultima nube.
@@ -97,6 +104,25 @@ public class CloudSpawner : MonoBehaviour {
         return temp;
     }//Ends ChangeXPosition
 
+    void PositionThePlayer()
+    {
+        GameObject[] normalClouds = GameObject.FindGameObjectsWithTag("Cloud"); //Buscamos las nubes no letales.
+
+        Vector3 firstCloudPosition = clouds[0].transform.position; //Almacenamos la posicion de la primera nube.
+
+        if (clouds[0].tag == "Deadly") //Revisamos si es letal.
+        {
+            Vector3 deadlyPosition = clouds[0].transform.position; //Le asignamos la posición de la primera nube no letal.
+            clouds[0].transform.position = normalClouds[0].transform.position; //Cambiamos de posición.
+            normalClouds[0].transform.position = deadlyPosition; 
+        }//Ends If
+
+        firstCloudPosition.y += 1f; // Ligero epacio entre nube y jugador.
+
+        player.transform.position = firstCloudPosition; ///Se coloca al jugador arriba de la nube.
+         
+
+    }// Ends Position The Player
 }//Ends Class
 
 

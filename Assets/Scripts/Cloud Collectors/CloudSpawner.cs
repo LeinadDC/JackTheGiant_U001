@@ -66,37 +66,44 @@ public class CloudSpawner : MonoBehaviour {
             temp.y = positionY;
             temp.x = Random.Range(minX, maxX); //Posición X aleatoria en el rango min y max.
 
-            switch (controlX)
-            {
-                case 0:
-                    temp = ChangeXPosition(temp, 0.0f, maxX);
-                    controlX = 1;
-                    break;
-                case 1:
-                    temp = ChangeXPosition(temp, 0.0f, minX);
-                    controlX = 2;
-                    break;
-                case 2:
-                    temp = ChangeXPosition(temp, 1.0f, maxX);
-                    controlX = 3;
-                    break;
-                case 3:
-                    temp = ChangeXPosition(temp, 0.0f, minX);
-                    controlX = 0;
-                    break;
-                default:
-                    break;
-            }
+            temp = ChangeXPosition(temp);
 
             lastCloudYPosition = positionY; //Se guarda la ultima Y de la ultima nube.
 
             clouds[i].transform.position = temp; //Se cambia el temp.
 
             positionY -= distanceBetweenClouds; //Se le resta la distancia deseada entre cada nube.
-                
+
         }//Ends For
 
     }//Ends Create Clouds
+
+    private Vector3 ChangeXPosition(Vector3 temp)
+    {
+        switch (controlX)
+        {
+            case 0:
+                temp = ChangeXPosition(temp, 0.0f, maxX);
+                controlX = 1;
+                break;
+            case 1:
+                temp = ChangeXPosition(temp, 0.0f, minX);
+                controlX = 2;
+                break;
+            case 2:
+                temp = ChangeXPosition(temp, 1.0f, maxX);
+                controlX = 3;
+                break;
+            case 3:
+                temp = ChangeXPosition(temp, 0.0f, minX);
+                controlX = 0;
+                break;
+            default:
+                break;
+        }
+
+        return temp;
+    }
 
     private Vector3 ChangeXPosition(Vector3 temp, float xPos, float MinMax)
     {
@@ -123,6 +130,40 @@ public class CloudSpawner : MonoBehaviour {
          
 
     }// Ends Position The Player
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.tag == "Cloud" || collision.tag == "Deadly") //Revisamos si es una nube
+        {
+            if (collision.transform.position.y == lastCloudYPosition) //Revisamos si es la última nube
+            {
+                Shuffle(clouds); //Shuffle de nuevo
+                Shuffle(collectables);
+                Vector3 cloudPosition = collision.transform.position;//Se obtiene la posición de la nube que colisiona
+
+                for (int i = 0; i < clouds.Length; i++)
+                {
+                    if (!clouds[i].activeInHierarchy) //Se recorre el arreglo de nubes para ver si están activas
+                    {
+                        cloudPosition = ChangeXPosition(cloudPosition); //Se cambia la posició´n
+                        cloudPosition.y -= distanceBetweenClouds; //Distancia para evitar choques
+                        lastCloudYPosition = cloudPosition.y; //Ultima nube
+
+                        clouds[i].transform.position = cloudPosition; //Se le da la posición a la nube
+                        clouds[i].SetActive(true); //Se activan para recrearlas.
+                    }//Ends If
+
+                }//Ends For
+
+
+            }//Ends Inner If
+
+        }//Ends If
+
+    }//Ends OnTriggerEnter
+
 }//Ends Class
+
+
 
 

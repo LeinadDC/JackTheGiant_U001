@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CloudSpawner : MonoBehaviour {
@@ -12,13 +13,23 @@ public class CloudSpawner : MonoBehaviour {
     private float minX, maxX, lastCloudYPosition;
     private int controlX;
 
-    void Awake() {
+    void Awake()
+    {
         controlX = 0;
         SetMinAndMaxX();
         CreateClouds();
         player = GameObject.Find("Player");
+        ActivateCoins();
 
     }//Ends Awake
+
+    private void ActivateCoins()
+    {
+        for (int i = 0; i < collectables.Length; i++)
+        {
+            collectables[i].SetActive(false);
+        }//Ends For
+    }//Ends Activate Coins
 
     void Start()
     {
@@ -141,20 +152,28 @@ public class CloudSpawner : MonoBehaviour {
                 Shuffle(collectables);
                 Vector3 cloudPosition = collision.transform.position;//Se obtiene la posición de la nube que colisiona
 
-                for (int i = 0; i < clouds.Length; i++)
+                foreach (var cloud in clouds.Where(b => !b.activeInHierarchy)) //Revisamos por cada nube que no este activo
                 {
-                    if (!clouds[i].activeInHierarchy) //Se recorre el arreglo de nubes para ver si están activas
+                    cloudPosition = ChangeXPosition(cloudPosition); //Se cambia la posició´n
+                    cloudPosition.y -= distanceBetweenClouds; //Distancia para evitar choques
+                    lastCloudYPosition = cloudPosition.y; //Ultima nube
+
+                    cloud.transform.position = cloudPosition; //Se le da la posición a la nube
+                    cloud.SetActive(true); //Se activan para recrearlas.
+
+                    if(cloud.tag != "Deadly")
                     {
-                        cloudPosition = ChangeXPosition(cloudPosition); //Se cambia la posició´n
-                        cloudPosition.y -= distanceBetweenClouds; //Distancia para evitar choques
-                        lastCloudYPosition = cloudPosition.y; //Ultima nube
+                        int randomNumber = Random.Range(0, collectables.Length);
 
-                        clouds[i].transform.position = cloudPosition; //Se le da la posición a la nube
-                        clouds[i].SetActive(true); //Se activan para recrearlas.
-                    }//Ends If
-
-                }//Ends For
-
+                        if (!collectables[randomNumber].activeInHierarchy)
+                        {
+                            Vector3 temp = cloud.transform.position;
+                            temp.y += 0.7f;
+                            collectables[randomNumber].transform.position = temp;
+                            collectables[randomNumber].SetActive(true);
+                        }
+                    }
+                }//Ends Foreach
 
             }//Ends Inner If
 

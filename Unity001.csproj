@@ -231,6 +231,8 @@
     <Compile Include="Assets\Scripts\CameraScripts\CameraScript.cs" />
     <Compile Include="Assets\Scripts\Cloud Collectors\CloudCollector.cs" />
     <Compile Include="Assets\Scripts\Cloud Collectors\CloudSpawner.cs" />
+    <Compile Include="Assets\Scripts\CollectablesScript\CollectablesScript.cs" />
+    <Compile Include="Assets\Scripts\MenuScripts\Gameplay.cs" />
     <Compile Include="Assets\Scripts\MenuScripts\HighscoreScript.cs" />
     <Compile Include="Assets\Scripts\MenuScripts\MainMenuScript.cs" />
     <Compile Include="Assets\Scripts\MenuScripts\OptionsScript.cs" />

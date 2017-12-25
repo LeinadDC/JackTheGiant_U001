@@ -27,7 +27,6 @@ public class PlayerScore : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
         CountScore();
 	}//Ends Update
 
@@ -38,6 +37,7 @@ public class PlayerScore : MonoBehaviour {
             case true:
                 if (transform.position.y < previousPosition.y) scoreCount++;
                 previousPosition = transform.position;
+                Gameplay.instance.SetScore(scoreCount);
                 break;
             case false:
                 Debug.Log("Count Score is false");
@@ -56,13 +56,14 @@ public class PlayerScore : MonoBehaviour {
                 ScorePoint(cointCount,100,coinClip, collision);
                 break;
             case "Life":
-                ScorePoint(lifeCount, 150, lifeClip,collision);
+                ScorePoint(lifeCount,150, lifeClip,collision);
                 break;
             case "Bounds":
                 KillPlayer();
                 break;
             case "Deadly":
                 KillPlayer();
+                Gameplay.instance.GameOverShowPanel(scoreCount, cointCount);
                 break;
 
             default:
@@ -84,6 +85,7 @@ public class PlayerScore : MonoBehaviour {
     {
         scoreType++;
         scoreCount += scoreAmount;
+        Gameplay.instance.SetScore(scoreCount);
         AudioSource.PlayClipAtPoint(audioClip, transform.position);
         collision.gameObject.SetActive(false);
         

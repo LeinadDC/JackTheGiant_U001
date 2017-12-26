@@ -44,6 +44,18 @@ public class Gameplay : MonoBehaviour {
     {
         SceneManager.LoadScene("MainMenu");
     }
+
+    public void RestartGame()
+    {
+        StartCoroutine(PlayerDied());
+    }
+
+    IEnumerator PlayerDied()
+    {
+        yield return new WaitForSeconds(1.5f);
+        SceneManager.LoadScene("Gameplay");
+    }
+
     public void SetScore(int score)
     {
         scoreText.text = "x" + score;

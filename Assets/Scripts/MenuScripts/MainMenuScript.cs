@@ -14,6 +14,7 @@ public class MainMenuScript : MonoBehaviour
 
     public void StartGame()
     {
+        GameManager.instance.gameStartedMain = true;
         SceneManager.LoadScene("Gameplay");
     }
 

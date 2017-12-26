@@ -60,10 +60,11 @@ public class PlayerScore : MonoBehaviour {
                 break;
             case "Bounds":
                 KillPlayer();
+                GameManager.instance.CheckGameStatus(scoreCount, cointCount, lifeCount);
                 break;
             case "Deadly":
                 KillPlayer();
-                Gameplay.instance.GameOverShowPanel(scoreCount, cointCount);
+                GameManager.instance.CheckGameStatus(scoreCount, cointCount, lifeCount);
                 break;
 
             default:

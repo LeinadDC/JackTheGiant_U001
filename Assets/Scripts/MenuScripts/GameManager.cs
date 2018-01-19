@@ -17,7 +17,13 @@ public class GameManager : MonoBehaviour {
 
 	void Awake () {
         MakeSingleton();
+  
 	}
+
+    void Start()
+    {
+        InitializeVariables();
+    }
 
     private void OnEnable()
     {
@@ -69,10 +75,60 @@ public class GameManager : MonoBehaviour {
         }
     }
 
+    void InitializeVariables()
+    {
+        if (!PlayerPrefs.HasKey("GameInitialized"))
+        {
+            GamePreferences.SetEasy(0);
+            GamePreferences.SetEasyCoins(0);
+            GamePreferences.SetEasyScore(0);
+
+            GamePreferences.SetMedium(1);
+            GamePreferences.SetMediumCoins(0);
+            GamePreferences.SetMediumScore(0);
+
+            GamePreferences.SetHard(0);
+            GamePreferences.SetHardCoins(0);
+            GamePreferences.SetHardScore(0);
+
+            //TODO: MusicState(0);
+
+            PlayerPrefs.SetInt("GameInitialized", 1);
+        }
+    }
+
     public void CheckGameStatus(int score, int coinScore, int lifeScore)
     {
         if(lifeScore < 0)
         {
+            int highScore;
+            int coingHighScore;
+
+            if (GamePreferences.GetEasy() == 1)
+            {
+                highScore = GamePreferences.GetEasyScore();
+                coingHighScore = GamePreferences.GetEasyCoins();
+
+                CheckEasyScore(score, coinScore, highScore, coingHighScore);
+
+            }
+
+            if (GamePreferences.GetMedium() == 1)
+            {
+                highScore = GamePreferences.GetMediumScore();
+                coingHighScore = GamePreferences.GetMediumCoins();
+
+                CheckMediumScore(score, coinScore, highScore, coingHighScore);
+            }
+
+            if (GamePreferences.GetHard() == 1)
+            {
+                highScore = GamePreferences.GetHardScore();
+                coingHighScore = GamePreferences.GetHardCoins();
+
+                CheckHardScore(score, coinScore, highScore, coingHighScore);
+            }
+
             gameRestarted = false;
             gameStartedMain = false;
 
@@ -92,6 +148,45 @@ public class GameManager : MonoBehaviour {
             gameRestarted = true;
 
             Gameplay.instance.RestartGame();
+        }
+    }
+
+    private static void CheckHardScore(int score, int coinScore, int highScore, int coingHighScore)
+    {
+        if (highScore < score)
+        {
+            GamePreferences.SetHardScore(score);
+        }
+
+        if (coingHighScore < coinScore)
+        {
+            GamePreferences.SetHardCoins(coinScore);
+        }
+    }
+
+    private static void CheckMediumScore(int score, int coinScore, int highScore, int coingHighScore)
+    {
+        if (highScore < score)
+        {
+            GamePreferences.SetMediumScore(score);
+        }
+
+        if (coingHighScore < coinScore)
+        {
+            GamePreferences.SetMediumCoins(coinScore);
+        }
+    }
+
+    private static void CheckEasyScore(int score, int coinScore, int highScore, int coingHighScore)
+    {
+        if (highScore < score)
+        {
+            GamePreferences.SetEasyScore(score);
+        }
+
+        if (coingHighScore < coinScore)
+        {
+            GamePreferences.SetEasyCoins(coinScore);
         }
     }
 }

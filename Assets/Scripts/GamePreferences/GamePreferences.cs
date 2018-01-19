@@ -10,6 +10,16 @@ public static class GamePreferences
 
     public static string MusicOn = "MusicOn";
 
+    public static void SetMusicState(int state)
+    {
+        PlayerPrefs.SetInt(MusicOn, state);
+    }
+
+    public static int GetMusicState()
+    {
+        return PlayerPrefs.GetInt(MusicOn);
+    }
+
     public static void SetEasy(int difficulty)
     {
         PlayerPrefs.SetInt(Easy, difficulty);

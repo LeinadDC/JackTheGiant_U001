@@ -14,7 +14,7 @@ public class Player : MonoBehaviour {
     }//Ends Awake
 	
 	void FixedUpdate () {
-        MovePlayer();
+       // MovePlayer();
 	}//Ends FixedUpdate
 
     void MovePlayer()

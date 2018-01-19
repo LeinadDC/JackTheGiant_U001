@@ -7,11 +7,27 @@ public class CameraScript : MonoBehaviour {
 
     private float speed = 1f, acceleration = 0.2f, maxSpeed = 3.2f;
 
+    private float easySpeed = 3.2f, mediumSpeed = 3.8f, hardSpeed = 4.2f;
+
     [HideInInspector]
     public bool moveCamera;
 
     void Start()
     {
+        if(GamePreferences.GetEasy() == 1)
+        {
+            maxSpeed = easySpeed;
+        }
+
+        if (GamePreferences.GetHard() == 1)
+        {
+            maxSpeed = mediumSpeed;
+        }
+
+        if (GamePreferences.GetHard() == 1)
+        {
+            maxSpeed = hardSpeed;
+        }
         moveCamera = true;
     }//Ends Start
 
